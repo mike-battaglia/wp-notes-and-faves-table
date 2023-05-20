@@ -1,5 +1,5 @@
 <? php
-  
+
 function enqueue_hardware_store_scripts() {
     wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
     wp_enqueue_script('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js', array('jquery'), null, true);
@@ -68,13 +68,13 @@ function hardware_book_shortcode($atts) {
         ),
         'meta_query' => array(
             array(
-                'key' => 'attribute1acf',
+                'key' => 'ny_state_taxable',
             ),
             array(
-                'key' => 'attribute2acf',
+                'key' => 'local_non_nyc',
             ),
             array(
-                'key' => 'attribute3acf',
+                'key' => 'local_nyc',
             ),
         ),
     	'orderby' => 'title',
@@ -86,7 +86,7 @@ function hardware_book_shortcode($atts) {
     $output = '';
     if ($query->have_posts()) {
         $output .= '
-            <table class="table">
+            <table class="book-table">
                 <thead>
                     <tr>
 						<th>Image</th>
@@ -94,9 +94,9 @@ function hardware_book_shortcode($atts) {
                         <th>Title</th>
                         <th>Excerpt</th>
                         <th>Content</th>
-                        <th>Attribute 1</th>
-                        <th>Attribute 2</th>
-                        <th>Attribute 3</th>
+                        <th>NY State</th>
+                        <th>Local (non-NYC)</th>
+                        <th>Local (NYC)</th>
                         <th>Favorites</th>
                         <th>Notes</th>
                     </tr>
@@ -124,6 +124,41 @@ function hardware_book_shortcode($atts) {
 
   			$button_text = empty($user_note) ? "Add" : "Edit";
 			
+			$ny_state_taxable = get_field('ny_state_taxable');
+			$ny_state_taxable_class = '';
+
+			if ($ny_state_taxable === 'taxable') {
+				$ny_state_taxable_class = 'is-taxable';
+			} elseif ($ny_state_taxable === 'exempt') {
+				$ny_state_taxable_class = 'is-exempt';
+			}
+
+			$ny_state_taxable = ucfirst($ny_state_taxable);
+
+			$local_non_nyc = get_field('local_non_nyc');
+			$local_non_nyc_class = '';
+
+			if ($local_non_nyc === 'taxable') {
+				$local_non_nyc_class = 'is-taxable';
+			} elseif ($local_non_nyc === 'exempt') {
+				$local_non_nyc_class = 'is-exempt';
+			}
+
+			$local_non_nyc = ucfirst($local_non_nyc);
+			
+			$local_nyc = get_field('local_nyc');
+			$local_nyc_class = '';
+
+			if ($local_nyc === 'taxable') {
+				$local_nyc_class = 'is-taxable';
+			} elseif ($local_nyc === 'exempt') {
+				$local_nyc_class = 'is-exempt';
+			}
+
+			$local_nyc = ucfirst($local_nyc);
+			
+
+			
             $output .= '
                 <tr>
 					<td>' . get_the_post_thumbnail(get_the_ID(), 'thumbnail') . '</td>
@@ -131,9 +166,9 @@ function hardware_book_shortcode($atts) {
                     <td>' . get_the_title() . '</td>
                     <td>' . get_the_excerpt() . '</td>
                     <td>' . get_the_content() . '</td>
-                    <td>' . get_field('attribute1acf') . '</td>
-                    <td>' . get_field('attribute2acf') . '</td>
-                    <td>' . get_field('attribute3acf') . '</td>
+                    <td class="ny-state ' . $ny_state_taxable_class . '">' . $ny_state_taxable . '</td>
+                    <td class="non-nyc ' . $local_non_nyc_class . '">' . $local_non_nyc . '</td>
+                    <td class="nyc ' . $local_nyc_class . '">' . $local_nyc . '</td>
                     <td><input type="checkbox" data-item-id="' . get_the_ID() . '" class="favorite-checkbox" ' . ($is_favorite ? 'checked' : '') . '></td>
                     <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#item-modal-' . get_the_ID() . '">' . $button_text . '</button></td>
                 </tr>
