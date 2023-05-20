@@ -89,6 +89,7 @@ function hardware_book_shortcode($atts) {
             <table class="table">
                 <thead>
                     <tr>
+						<th>Image</th>
                         <th>Category</th>
                         <th>Title</th>
                         <th>Excerpt</th>
@@ -121,8 +122,11 @@ function hardware_book_shortcode($atts) {
 
             $user_note = get_user_meta(get_current_user_id(), 'note_item_' . get_the_ID(), true);
 
+  			$button_text = empty($user_note) ? "Add" : "Edit";
+			
             $output .= '
                 <tr>
+					<td>' . get_the_post_thumbnail(get_the_ID(), 'thumbnail') . '</td>
                     <td>' . $category_list . '</td>
                     <td>' . get_the_title() . '</td>
                     <td>' . get_the_excerpt() . '</td>
@@ -131,7 +135,7 @@ function hardware_book_shortcode($atts) {
                     <td>' . get_field('attribute2acf') . '</td>
                     <td>' . get_field('attribute3acf') . '</td>
                     <td><input type="checkbox" data-item-id="' . get_the_ID() . '" class="favorite-checkbox" ' . ($is_favorite ? 'checked' : '') . '></td>
-                    <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#item-modal-' . get_the_ID() . '">Add/Edit Notes</button></td>
+                    <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#item-modal-' . get_the_ID() . '">' . $button_text . '</button></td>
                 </tr>
                 <div class="modal fade" id="item-modal-' . get_the_ID() . '" tabindex="-1" role="dialog" aria-labelledby="item-modal-label" aria-hidden="true">
                     <div class="modal-dialog" role="document">
