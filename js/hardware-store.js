@@ -1,47 +1,29 @@
-jQuery(document).ready(function($) {
-    function handleFavorites(itemId, favorite) {
-        $.ajax({
-            url: ajax_object.ajax_url,
-            method: 'POST',
-            data: {
-                action: 'handle_favorites',
-                item_id: itemId,
-                favorite: favorite
-            },
-            success: function(response) {
-                if (favorite) {
-                    alert(response + ' added to your favorites.');
-                } else {
-                    alert(response + ' removed from your favorites.');
-                }
-            }
-        });
-    }
+console.log("HW BOOK2 JS CALLED");
 
-    function handleNotes(itemId, note) {
-        $.ajax({
-            url: ajax_object.ajax_url,
-            method: 'POST',
-            data: {
-                action: 'handle_notes',
-                item_id: itemId,
-                note: note
-            },
-            success: function(response) {
-                alert('Note updated successfully for ' + response + '.');
-            }
+jQuery(function($) {
+    // Handle favorite checkbox change
+    $('.favorite-item').change(function() {
+        $.post(ajax_object.ajax_url, {
+            action: 'toggle_favorite',
+            post_id: $(this).data('postId'),
+            checked: $(this).prop('checked'),
         });
-    }
-
-    $(document).on('click', '.favorite-checkbox', function() {
-        var itemId = $(this).data('item-id');
-        var favorite = $(this).is(':checked');
-        handleFavorites(itemId, favorite);
     });
 
-    $(document).on('click', '.save-note', function() {
-        var itemId = $(this).data('item-id');
-        var note = $('#note-' + itemId).val();
-        handleNotes(itemId, note);
+    // Handle add note button click
+    $('.add-note').click(function() {
+        var modal = $('.note-modal[data-post-id="' + $(this).data('postId') + '"]');
+        modal.show();
+    });
+
+    // Handle save note button click
+    $('.save-note').click(function() {
+        var modal = $(this).closest('.note-modal');
+        $.post(ajax_object.ajax_url, {
+            action: 'save_note',
+            post_id: modal.data('postId'),
+            note: modal.find('textarea').val(),
+        });
+        modal.hide();
     });
 });
