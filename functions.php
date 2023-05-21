@@ -1,5 +1,4 @@
 <? php
-
 function enqueue_hardware_store_scripts() {
     wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
     wp_enqueue_script('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js', array('jquery'), null, true);
@@ -52,7 +51,7 @@ function handle_notes() {
 
 function hardware_book_shortcode($atts) {
     $a = shortcode_atts(array(
-        'letter' => 'A',
+        'letter' => '',
         'category' => '',
     ), $atts);
 
@@ -89,16 +88,16 @@ function hardware_book_shortcode($atts) {
             <table class="book-table">
                 <thead>
                     <tr>
-						<th>Image</th>
-                        <th>Category</th>
-                        <th>Title</th>
-                        <th>Excerpt</th>
-                        <th>Content</th>
-                        <th>NY State</th>
-                        <th>Local (non-NYC)</th>
-                        <th>Local (NYC)</th>
-                        <th>Favorites</th>
-                        <th>Notes</th>
+						<th class="th-image">Image</th>
+                        <th class="th-category">Category</th>
+                        <th class="th-title">Title</th>
+                        <th class="th-excerpt">Excerpt</th>
+                        <th class="th-content">Content</th>
+                        <th class="th-state">NY State</th>
+                        <th class="th-local">Local (non-NYC)</th>
+                        <th class="th-city">Local (NYC)</th>
+                        <th class="th-favorites">Favorites</th>
+                        <th class="th-notes">Notes</th>
                     </tr>
                 </thead>
                 <tbody>';
