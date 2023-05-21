@@ -88,10 +88,12 @@ function hardware_book_shortcode($atts) {
 
 	$output = '';
     $output .= '
-		<div>
-            <input type="text" id="search-box" placeholder="Search" />
-            <button type="button" id="search-btn" class="btn btn-primary">Search</button>
-        </div>
+    <div>
+        <input type="text" id="search-box" placeholder="Search..." />
+        <button type="button" id="search-btn" class="btn btn-primary">Search</button>
+        <select id="category-dropdown"></select>
+        <select id="letter-dropdown"></select>
+    </div>
         <div id="search-results">';
 
     if ($query->have_posts()) {
@@ -483,3 +485,41 @@ function user_favorites_shortcode()
 }
 
 add_shortcode('user-favorites', 'user_favorites_shortcode');
+			
+add_action('wp_ajax_get_item_categories', 'get_item_categories');
+add_action('wp_ajax_nopriv_get_item_categories', 'get_item_categories');
+
+function get_item_categories()
+{
+  $categories = get_terms(
+    array(
+      'taxonomy' => 'item-category',
+      'hide_empty' => false,
+    )
+  );
+
+  $output = '';
+  foreach ($categories as $category) {
+    $output .= '<option value="' . $category->slug . '">' . $category->name . '</option>';
+  }
+
+  echo $output;
+  wp_die();
+}
+
+add_action('wp_ajax_update_hardware_book_table', 'update_hardware_book_table');
+add_action('wp_ajax_nopriv_update_hardware_book_table', 'update_hardware_book_table');
+
+function update_hardware_book_table()
+{
+    $letter = sanitize_text_field($_POST['letter']);
+    $category = sanitize_text_field($_POST['category']);
+
+    $atts = array(
+        'letter' => $letter,
+        'category' => $category,
+    );
+
+    echo hardware_book_shortcode($atts);
+    wp_die();
+}
