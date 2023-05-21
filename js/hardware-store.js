@@ -1,4 +1,22 @@
 jQuery(document).ready(function($) {
+    
+        $("#search-btn").on("click", function () {
+            var searchTerm = $("#search-box").val();
+
+            $.ajax({
+                url: ajax_object.ajax_url,
+                method: "POST",
+                data: {
+                    action: "search_items",
+                    search_term: searchTerm,
+                },
+                success: function (response) {
+                    $("#search-results").html(response);
+                },
+            });
+        });
+
+    
     function handleFavorites(itemId, favorite) {
         $.ajax({
             url: ajax_object.ajax_url,
@@ -43,21 +61,5 @@ jQuery(document).ready(function($) {
         var itemId = $(this).data('item-id');
         var note = $('#note-' + itemId).val();
         handleNotes(itemId, note);
-    });
-});
-
-$("#search-btn").on("click", function () {
-    var searchTerm = $("#search-box").val();
-
-    $.ajax({
-        url: ajax_object.ajax_url,
-        method: "POST",
-        data: {
-            action: "search_items",
-            search_term: searchTerm,
-        },
-        success: function (response) {
-            $("#search-results").html(response);
-        },
     });
 });
