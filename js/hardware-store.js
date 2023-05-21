@@ -2,6 +2,56 @@ console.log("js/hardware-store.js called");
 
 jQuery(document).ready(function($) {
     
+        function populateCategoryDropdown() {
+          $.ajax({
+            url: ajax_object.ajax_url,
+            method: "POST",
+            data: {
+              action: "get_item_categories",
+            },
+            success: function (response) {
+              $("#category-dropdown").html(response);
+              $("#category-dropdown").prepend("<option value='all'>All</option>");
+            },
+          });
+        }
+    
+        function populateLetterDropdown() {
+          var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+          var options = "";
+
+          for (var i = 0; i < letters.length; i++) {
+            options += "<option value='" + letters[i] + "'>" + letters[i] + "</option>";
+          }
+
+          $("#letter-dropdown").html(options);
+          $("#letter-dropdown").prepend("<option value='all'>All</option>");
+        }
+
+        populateCategoryDropdown();
+        populateLetterDropdown();
+    
+        $("#category-dropdown, #letter-dropdown").on("change", function () {
+            var selectedCategory = $("#category-dropdown").val();
+            var selectedLetter = $("#letter-dropdown").val();
+
+            $.ajax({
+                url: ajax_object.ajax_url,
+                method: "POST",
+                data: {
+                    action: "update_hardware_book_table",
+                    letter: selectedLetter,
+                    category: selectedCategory,
+                },
+                success: function (response) {
+                    $("#search-results").html(response);
+                },
+            });
+        });
+
+        populateCategoryDropdown();
+        populateLetterDropdown();
+    
         $("#search-btn").on("click", function () {
             var searchTerm = $("#search-box").val();
 
