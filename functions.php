@@ -40,6 +40,12 @@ function create_catalog_table($favorites_only = false) {
         <input type="hidden" class="catalog-user-id" value="<?php echo $current_user->ID; ?>">
         <input type="hidden" class="favorites-only" value="<?php echo $favorites_only ? '1' : '0'; ?>">
         <div class="row mb-3">
+			<div class="col-md-12">
+				<label for="search-input">Search:</label>
+				<input type="text" class="form-control search-input" id="search-input" placeholder="Search by item title">
+			</div>
+		</div>
+		<div class="row mb-3">
     <div class="col-md-4">
         <label for="item-category-filter">Category:</label>
         <?php
@@ -66,7 +72,7 @@ function create_catalog_table($favorites_only = false) {
     </div>
 </div>
 
-<div class="table-responsive">
+<div class="mbatt-table-responsive">
     <table class="table table-striped">
         <thead>
             <tr>
@@ -152,6 +158,7 @@ function fetch_items_callback() {
     }
 	
     // Gather filter and pagination information from AJAX request
+    $search_term = isset($_POST['search_term']) ? sanitize_text_field($_POST['search_term']) : '';
     $category_filter = isset($_POST['category_filter']) ? sanitize_text_field($_POST['category_filter']) : '';
     $letter_filter = isset($_POST['letter_filter']) ? sanitize_text_field($_POST['letter_filter']) : '';
     $current_page = isset($_POST['current_page']) ? intval($_POST['current_page']) : 1;
@@ -171,6 +178,7 @@ function fetch_items_callback() {
         'paged' => $current_page,
         'orderby' => 'title',
         'order' => 'ASC',
+		's' => $search_term,
     );
 
     if ($letter_filter) {
@@ -236,8 +244,9 @@ function fetch_items_callback() {
         echo $is_favorite ? ' checked' : '';
         echo '></td>';
         echo '<td class="notes-cell">';
-        echo '<button class="btn btn-sm btn-outline-primary notes-button" data-item-id="' . esc_attr($item_id) . '"';
-        echo ' data-item-title="' . esc_attr($item_title) . '" data-notes="' . esc_attr($item_note) . '">Add/Edit Notes</button>';
+        $button_text = $item_note ? 'Edit' : 'Add';
+		echo '<button class="btn btn-sm btn-outline-primary notes-button" data-item-id="' . esc_attr($item_id) . '"';
+		echo ' data-item-title="' . esc_attr($item_title) . '" data-notes="' . esc_attr($item_note) . '">' . $button_text . '</button>';
         echo '</td>';
         echo '</tr>';
 
