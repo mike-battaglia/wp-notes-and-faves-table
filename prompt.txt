@@ -1,0 +1,43 @@
+I am making a website that will serve as a hardware store's catalog.
+
+I need a searchable and filterable table that will display the items in the catalog, as well as allow users to mark items as favorites and add their own private note to each item.
+
+Users must be logged in and notes and favorites will be stored as user meta.
+
+Each item in the catalog is represented by a post with the custom post type "item." 
+
+Each "item" has a title, an excerpt, post content, a category (custom taxonomy: "item-category"), and three custom meta fields from ACF: ny_state_taxable , local_non_nyc, local_nyc. The item-category taxonomy and the custom meta fields have already been created using ACF.
+
+The filters should include item-category and the initial letter of the item's title.
+
+The items should always be sorted alphabetically by title.
+
+The table should include the following columns:
+1. post featured image
+2. post category
+3. post title
+4. post excerpt
+5. post content
+6. post meta ny_state_taxable
+7. post meta local_non_nyc
+8. post meta local_nyc
+9. favorites
+10. notes
+
+Each <th> should have a unique class.  Each <td> should have a class named after its column. For the coumns that contain the meta ny_state_taxable, local_non_nyc, and local_nyc, each <td> should have a class that is identical to the meta value.
+
+The column called Favorites should include a check box. If the user has already marked the item as Favorite then the checkbox should be checked on page load. If the user has unchecked the box then it should be removed from the user's favorites and be unchecked on page load. The user should see a modal that says the item title has been added to or removed from favorites any time the box is checked or unchecked.
+
+The Notes column should have a button on each row that a user can click to add or edit their own note about the Item. The Note's text editor should open in a modal.
+
+Since there will be thousands of items in the database, the table should use pagination.
+
+This should use AJAX for a smooth experience, and this should work on desktop and mobile.
+
+Include any html needed for any modals, and include and enqueue Bootstrap as well.
+
+Another shortcode should be provided that will display an identical table that only contains user favorites.
+
+All PHP should go in the functions.php file.
+
+You are expected to provide the full implementation and all required code directly in your response. You will not rely on Gists. You will not leave any TODO in the code and do not leave comments where code should be.
