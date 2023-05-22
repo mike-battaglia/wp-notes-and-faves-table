@@ -44,7 +44,7 @@ jQuery(document).ready(function($) {
                     category: selectedCategory,
                 },
                 success: function (response) {
-                    $("#search-results").html(response);
+                    $("#search-results #table-content").replaceWith('<div id="table-content">' + response + '</div>');
                 },
             });
         });
