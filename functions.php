@@ -1,4 +1,4 @@
-<?
+<? 
 
 function enqueue_hardware_store_scripts() {
     wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
@@ -7,51 +7,6 @@ function enqueue_hardware_store_scripts() {
     wp_localize_script('hardware-store', 'ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
 }
 add_action('wp_enqueue_scripts', 'enqueue_hardware_store_scripts');
-
-add_action('wp_ajax_handle_favorites', 'handle_favorites');
-add_action('wp_ajax_nopriv_handle_favorites', 'handle_favorites');
-
-add_action('wp_ajax_search_items', 'search_items');
-add_action('wp_ajax_nopriv_search_items', 'search_items');
-
-function handle_favorites() {
-    $user_id = get_current_user_id();
-    if (!$user_id) {
-        wp_die('You are not allowed to perform this action.');
-    }
-
-    $item_id = intval($_POST['item_id']);
-    $favorite = ($_POST['favorite'] === 'true') ? true : false;
-    $item_title = get_the_title($item_id);
-
-    if ($favorite) {
-        add_user_meta($user_id, 'favorite_item', $item_id);
-    } else {
-        delete_user_meta($user_id, 'favorite_item', $item_id);
-    }
-
-    echo esc_html($item_title);
-    wp_die();
-}
-
-add_action('wp_ajax_handle_notes', 'handle_notes');
-add_action('wp_ajax_nopriv_handle_notes', 'handle_notes');
-
-function handle_notes() {
-    $user_id = get_current_user_id();
-    if (!$user_id) {
-        wp_die('You are not allowed to perform this action.');
-    }
-
-    $item_id = intval($_POST['item_id']);
-    $note = sanitize_text_field($_POST['note']);
-    $item_title = get_the_title($item_id);
-
-    update_user_meta($user_id, 'note_item_' . $item_id, $note);
-
-    echo esc_html($item_title);
-    wp_die();
-}
 
 function hardware_book_shortcode($atts) {
     $a = shortcode_atts(array(
@@ -94,11 +49,11 @@ function hardware_book_shortcode($atts) {
         <select id="category-dropdown"></select>
         <select id="letter-dropdown"></select>
     </div>
-        <div id="search-results">';
+    <div id="search-results">
+        <div id="table-content">';
 
-    if ($query->have_posts()) {
-        $output .= '
-            <table class="table">
+if ($query->have_posts()) {
+        $output .= '<table class="table">
                 <thead>
                     <tr>
 						<th class="th-image">Image</th>
@@ -210,13 +165,58 @@ function hardware_book_shortcode($atts) {
         $output .= '<p>No items found in the given category and letter.</p>';
     }
 
-    $output .= '</div>';
-
+	$output .= '
+		</div>
+    	</div>';
+	
     wp_reset_postdata();
 
     return $output;
 }
+
 add_shortcode('hardware-book', 'hardware_book_shortcode');
+
+function handle_favorites() {
+    $user_id = get_current_user_id();
+    if (!$user_id) {
+        wp_die('You are not allowed to perform this action.');
+    }
+
+    $item_id = intval($_POST['item_id']);
+    $favorite = ($_POST['favorite'] === 'true') ? true : false;
+    $item_title = get_the_title($item_id);
+
+    if ($favorite) {
+        add_user_meta($user_id, 'favorite_item', $item_id);
+    } else {
+        delete_user_meta($user_id, 'favorite_item', $item_id);
+    }
+
+    echo esc_html($item_title);
+    wp_die();
+}
+
+add_action('wp_ajax_handle_favorites', 'handle_favorites');
+add_action('wp_ajax_nopriv_handle_favorites', 'handle_favorites');
+
+function handle_notes() {
+    $user_id = get_current_user_id();
+    if (!$user_id) {
+        wp_die('You are not allowed to perform this action.');
+    }
+
+    $item_id = intval($_POST['item_id']);
+    $note = sanitize_text_field($_POST['note']);
+    $item_title = get_the_title($item_id);
+
+    update_user_meta($user_id, 'note_item_' . $item_id, $note);
+
+    echo esc_html($item_title);
+    wp_die();
+}
+
+add_action('wp_ajax_handle_notes', 'handle_notes');
+add_action('wp_ajax_nopriv_handle_notes', 'handle_notes');
 
 function search_items()
 {
@@ -346,6 +346,9 @@ function search_items()
     echo $output;
     wp_die();
 }	
+
+add_action('wp_ajax_search_items', 'search_items');
+add_action('wp_ajax_nopriv_search_items', 'search_items');
 
 function user_favorites_shortcode()
 {
@@ -486,9 +489,6 @@ function user_favorites_shortcode()
 
 add_shortcode('user-favorites', 'user_favorites_shortcode');
 			
-add_action('wp_ajax_get_item_categories', 'get_item_categories');
-add_action('wp_ajax_nopriv_get_item_categories', 'get_item_categories');
-
 function get_item_categories()
 {
   $categories = get_terms(
@@ -507,8 +507,8 @@ function get_item_categories()
   wp_die();
 }
 
-add_action('wp_ajax_update_hardware_book_table', 'update_hardware_book_table');
-add_action('wp_ajax_nopriv_update_hardware_book_table', 'update_hardware_book_table');
+add_action('wp_ajax_get_item_categories', 'get_item_categories');
+add_action('wp_ajax_nopriv_get_item_categories', 'get_item_categories');
 
 function update_hardware_book_table()
 {
@@ -523,3 +523,6 @@ function update_hardware_book_table()
     echo hardware_book_shortcode($atts);
     wp_die();
 }
+
+add_action('wp_ajax_update_hardware_book_table', 'update_hardware_book_table');
+add_action('wp_ajax_nopriv_update_hardware_book_table', 'update_hardware_book_table');
