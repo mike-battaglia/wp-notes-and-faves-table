@@ -1,4 +1,5 @@
 jQuery(document).ready(function($) {
+	
     /* Function to fetch items based on filters and pagination */
     function fetchItems() {
 		var searchTerm = $('.search-input').val();
