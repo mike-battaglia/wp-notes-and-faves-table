@@ -48,15 +48,24 @@ function create_catalog_table($favorites_only = false) {
 		<div class="row mb-3">
     <div class="col-md-4">
         <label for="item-category-filter">Category:</label>
-        <?php
-        $categories = get_terms(array('taxonomy' => 'item-category', 'hide_empty' => false));
-        ?>
-        <select class="form-control item-category-filter" id="item-category-filter">
-            <option value="">All Categories</option>
-            <?php foreach ($categories as $category) : ?>
-                <option value="<?php echo $category->term_id; ?>"><?php echo $category->name; ?></option>
-            <?php endforeach; ?>
-        </select>
+		<?php
+			function create_dropdown_options($categories, $parent = 0, $level = 0) {
+				$options = '';
+				foreach ($categories as $category) {
+					if ($category->parent == $parent) {
+						$indent = str_repeat('&nbsp;&nbsp;', $level * 2);
+						$options .= '<option value="' . $category->term_id . '">' . $indent . $category->name . '</option>';
+						$options .= create_dropdown_options($categories, $category->term_id, $level + 1);
+					}
+				}
+				return $options;
+			}
+			$categories = get_terms(array('taxonomy' => 'item-category', 'hide_empty' => false, 'orderby' => 'name', 'order' => 'ASC'));
+		?>
+		<select class="form-control item-category-filter" id="item-category-filter">
+			<option value="">All Categories</option>
+			<?php echo create_dropdown_options($categories); ?>
+		</select>
     </div>
     <div class="col-md-4">
 		<label for="letter-dropdown">Initial Letter:</label>
@@ -72,7 +81,7 @@ function create_catalog_table($favorites_only = false) {
     </div>
 </div>
 
-<div class="mbatt-table-responsive">
+<div class="table-responsive">
     <table class="table table-striped">
         <thead>
             <tr>
