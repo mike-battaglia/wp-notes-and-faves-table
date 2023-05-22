@@ -1,17 +1,19 @@
 jQuery(document).ready(function($) {
     /* Function to fetch items based on filters and pagination */
     function fetchItems() {
+		var searchTerm = $('.search-input').val();
         var categoryId = $('.item-category-filter').val();
 		var letterFilter = $('#letter-dropdown').val();
         var currentPage = $('.pagination .active .page-link').data('page-number') || 1;
         var userId = $('.catalog-user-id').val();
         var favoritesOnly = $('.favorites-only').val() === '1';
-
+	
         $.ajax({
             url: ajax_object.ajaxurl,
             method: 'POST',
             data: {
                 action: 'fetch_items',
+				search_term: searchTerm,
                 category_filter: categoryId,
                 letter_filter: letterFilter,
                 current_page: currentPage,
@@ -145,5 +147,9 @@ jQuery(document).ready(function($) {
         }
     });
 
+	$('.search-input').on('input', function() {
+    fetchItems();
+	});
+	
 });
 
