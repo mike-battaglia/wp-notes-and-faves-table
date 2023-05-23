@@ -1,4 +1,3 @@
-<?
 function enqueue_custom_styles_scripts() {
     wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
     wp_enqueue_script('jquery');
@@ -132,9 +131,15 @@ foreach (range('A', 'Z') as $letter) {
         </tr>
     </thead>
     <tbody>
-        // Replace this placeholder comment with the output of the AJAX search_and_filter_items call
+
     </tbody>
 </table>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        jQuery('#search_box').trigger('input');
+    });
+</script>
 
 <div class="modal" tabindex="-1" role="dialog" id="note_modal">
   <div class="modal-dialog" role="document">
