@@ -2,7 +2,7 @@ I am making a website that will serve as a hardware store's catalog. Each item i
 
 I need a shortcode that will create a table that will display the items in the catalog, as well as allow users to mark items as favorites and add their own private note to each item.
 
-Users must be logged in, and notes and favorites will be stored as user meta.
+Users must be logged in, and notes and favorites will be stored as user meta in the database.
 
 There should be a search box and a filter above the table. The search should return items where the item title includes the search term. The filter should have a dropdown for selecting one of the hierarchical item-category terms, and another dropdown for selecting a letter (the first letter in the item's title).
 
@@ -18,11 +18,11 @@ The table should include the following columns:
 9. favorites
 10. notes
 
-Each <th> should have a unique class.  Each <td> should have a class named after its column. For the coumns that contain the meta ny_state_taxable, each <td> should have a class that is identical to the meta value.
+Each <th> should have a unique class.  Each <td> should have a class named after its column. For the columns that contain the meta ny_state_taxable, each <td> should have a class that is identical to the meta value.
 
 The column called Favorites should include a check box. If the user has already marked the item as Favorite then the checkbox should be checked on page load. If the user has unchecked the box then it should be removed from the user's favorites and be unchecked on page load. The user should see a modal that says the item title has been added to or removed from favorites any time the box is checked or unchecked.
 
-The Notes column should have a button on each row that a user can click to add or edit their own note about the Item. The Note's text editor should open in a modal.
+The Notes column should have a button on each row that a user can click to add or edit their own note about the Item. The Note's text editor should open in a modal. If a note exists, the button should say "Edit." If a note does not exist, the button should say "Add."
 
 Since there will be thousands of items in the database, the table should use pagination with "Previous," "Next," and page numbers at the bottom of the table.
 
