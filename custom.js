@@ -84,3 +84,5 @@ jQuery(document).ready(function($) {
 })(jQuery);
     
 });
+
+search_filter_items();
